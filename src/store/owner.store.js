@@ -26,18 +26,19 @@ const mutations = {
 const actions = {
     addOwner({commit}, owner) {
         return OwnerService.create(owner).then((res) => {
-            console.log(res);
             commit('SET_OWNER', owner);
         });
     },
     getOwners({commit}) {
         return OwnerService.getAll().then((res) => {
             commit('SET_OWNERS', res.data);
+            return res.data;
         });
     },
     getOwner({commit}, id) {
         return OwnerService.get(id).then((res) => {
             commit('SET_OWNER', res.data);
+            return res.data;
         });
     },
     deleteOwner({commit, state}, id) {
