@@ -10,12 +10,10 @@
             </template>
             <template #footer>
                 <Button label="Details" class="p-button-info p-button-rounded"/>
-                <Button label="Edit" />
+                <Button label="Edit" class="p-button-rounded" />
                 <Button label="Remove" class="p-button-danger p-button-rounded"/>
             </template>
         </Card>
-        <Button label="Details" class="p-button-info p-button-rounded"/>
-    
     </div>
 </template>
 
