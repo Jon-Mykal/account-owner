@@ -25,7 +25,10 @@
                             v-for="owner in owners"
                             :key="owner.ownerId"
                             :owner="owner"
-                            @click.native="onOwnerClicked(owner.ownerId)" />
+                            @viewDetails="viewDetails"
+                            @editOwner="editOwner"
+                            @removeOwner="removeOwner" />
+
                         </tbody>
                     </table>
                 </section>
@@ -50,7 +53,13 @@ export default {
         const storeName = 'ownerStore';
         const state = reactive({
             owners: [],
-            onOwnerClicked(ownerId) {
+            viewDetails(ownerId) {
+                console.log(ownerId);
+            },
+            editOwner(ownerId) {
+                console.log(ownerId);
+            },
+            removeOwner(ownerId) {
                 console.log(ownerId);
             }
         });
