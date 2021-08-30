@@ -11,6 +11,9 @@ const mutations = {
     SET_OWNER(state, owner) {
         state.owner = owner;
     },
+    SET_OWNER_WITH_ACCOUNTS(state, owner) {
+        state.owner = owner;
+    },
     SET_OWNERS(state, owners) {
         state.owners = owners;
     },
@@ -38,6 +41,12 @@ const actions = {
     getOwner({commit}, id) {
         return OwnerService.get(id).then((res) => {
             commit('SET_OWNER', res.data);
+            return res.data;
+        });
+    },
+    getOwnerAccounts({commit}, id) {
+        return OwnerService.getAccounts(id).then((res) => {
+            commit('SET_OWNER_WITH_ACCOUNTS', res.data);
             return res.data;
         });
     },
