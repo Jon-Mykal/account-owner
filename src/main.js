@@ -3,6 +3,8 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import PrimeVue from 'primevue/config'
+import ConfirmationService from 'primevue/confirmationservice'
+import ConfirmDialog from 'primevue/confirmdialog'
 import Card from 'primevue/card'
 import Button from 'primevue/button'
 
@@ -14,14 +16,18 @@ import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'
+
 import axios from 'axios'
 
 axios.defaults.baseURL = process.env.VUE_APP_API_ENDPOINT;
 const app = createApp(App);
 
-
+app.use(ConfirmationService);
 app.use(store).use(router).use(PrimeVue).mount('#app');
+
+// PrimeVue Components
 app.component('Card', Card)
 app.component('Button', Button)
+app.component('ConfirmDialog', ConfirmDialog)
 
 
