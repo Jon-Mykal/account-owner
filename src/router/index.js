@@ -4,6 +4,7 @@ import NotFound from '../views/errorpages/NotFound.vue'
 
 // Owner Files
 import Owners from '../views/Owner/Owners.vue';
+import OwnerDetails from '../views/Owner/OwnerDetails.vue';
 
 const routes = [
   {
@@ -20,6 +21,12 @@ const routes = [
     path: '/owners',
     name: 'OwnerList',
     component: Owners
+  },
+  {
+    path: '/owners/:id',
+    name: 'OwnerDetails',
+    component: OwnerDetails,
+    props: true
   },
   {
     path: '/about',
