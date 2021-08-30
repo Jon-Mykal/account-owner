@@ -41,6 +41,7 @@
 import OwnerCard from '@/components/Owner/OwnerCard'
 import { reactive, toRefs, onMounted } from 'vue'
 import {useStore} from 'vuex'
+import { useRouter} from 'vue-router';
 import OwnerRow from '../../components/Owner/OwnerRow.vue'
 
 export default {
@@ -50,16 +51,28 @@ export default {
     },
     setup () {
         const store = useStore();
+        const router = useRouter();
         const storeName = 'ownerStore';
+
+        const routeData = {
+            name: '',
+            params: null
+        };
         const state = reactive({
             owners: [],
             viewDetails(ownerId) {
-                console.log(ownerId);
+               routeData.name = 'OwnerDetails';
+               routeData.params = { id: ownerId };
+               router.push(routeData);
             },
             editOwner(ownerId) {
+               routeData.name = 'OwnerDetails';
+               routeData.params = { id: ownerId };
                 console.log(ownerId);
             },
             removeOwner(ownerId) {
+               routeData.name = 'OwnerDetails';
+               routeData.params = { id: ownerId };
                 console.log(ownerId);
             }
         });
