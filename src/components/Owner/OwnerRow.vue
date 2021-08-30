@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { reactive, toRefs } from '@vue/reactivity'
+import { reactive, toRefs } from 'vue'
 export default {
     props: {
         owner: {
