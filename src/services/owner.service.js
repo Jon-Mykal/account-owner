@@ -11,6 +11,10 @@ const OwnerService = {
         return axios.get(`${RESOURCE_NAME}/${id}`);
     },
 
+    getAccounts(id) {
+        return axios.get(`${RESOURCE_NAME}/${id}/accounts`)
+    },
+
     create(data) {
         return axios.post(RESOURCE_NAME, data);
     },
