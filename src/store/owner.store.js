@@ -56,6 +56,7 @@ const actions = {
             state.owners = state.owners.filter(x => x.Id != id);
             commit('CLEAR_OWNER');
             commit('SET_OWNERS', state.owners);
+            return state.owners;
         });
     }
 }
