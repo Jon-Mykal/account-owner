@@ -7,6 +7,9 @@ import ConfirmationService from 'primevue/confirmationservice'
 import ConfirmDialog from 'primevue/confirmdialog'
 import Card from 'primevue/card'
 import Button from 'primevue/button'
+import InputText from 'primevue/inputtext'
+import Calendar  from 'primevue/calendar'
+import Dialog from 'primevue/dialog'
 
 
 // PrimeVue Styling
@@ -29,5 +32,8 @@ app.use(store).use(router).use(PrimeVue).mount('#app');
 app.component('Card', Card)
 app.component('Button', Button)
 app.component('ConfirmDialog', ConfirmDialog)
+app.component('InputText', InputText)
+app.component('Calendar', Calendar)
+app.component('Dialog', Dialog)
 
 
