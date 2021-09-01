@@ -8,31 +8,34 @@
                 <Button label="Ok" @click="closePopup()"/>
             </template>
         </Dialog>
-        <section class="form-wrapper">
-            <form @submit.prevent>
-                <section class="form-group">
+        <section class="d-flex justify-content-center">
+            <section class="form-wrapper w-25 mt-5 shadow">
+                <h1 class="h3 my-3 py-3 font-weight-normal text-center">Create Owner</h1>
+                <form @submit.prevent class="form-horizontal">
+                <section class="form-group mb-3 pb-3 px-3">
                     <span class="p-float-label">
-                        <InputText id="ownerName" type="text" v-model="owner.name"/>
+                        <InputText id="ownerName" class="w-100" type="text" v-model="owner.name"/>
                         <label for="ownerName">Owner's Name</label>
                     </span>
                 </section>
-                <section class="form-group">
+                <section class="form-group mb-3 pb-3 px-3">
                     <span class="p-float-label">
-                        <Calendar id="dateOfBirth" v-model="owner.dateOfBirth" />
+                        <Calendar id="dateOfBirth" class="w-100" v-model="owner.dateOfBirth" />
                         <label for="dateOfBirth">Date of birth</label>
                     </span>
                 </section>
-                <section class="form-group">
+                <section class="form-group mb-3 pb-3 px-3">
                     <span class="p-float-label">
-                        <InputText id="address" v-model="owner.address"/>
+                        <InputText id="address" class="w-100" v-model="owner.address"/>
                         <label for="address">Address</label>
                     </span>
                 </section>
-                <section class="form-group">
-                    <Button label="Add Owner" @click="addOwner()"/>
-                    <Button label="Cancel" @click="goBack()" />
+                <section class="d-flex flex-column mb-5 px-3">
+                    <Button label="Add Owner" class="btn btn-primary mb-2" @click="addOwner()"/>
+                    <Button label="Cancel" class="btn btn-outline-secondary" @click="goBack()" />
                 </section>
-            </form>
+                </form>
+            </section>
         </section>
     </div>
 </template>
@@ -58,8 +61,6 @@ export default {
                     address: ""
                 },
                 addOwner() {
-                    //store.dispatch(`$`)
-                   
                     store.dispatch(`${storeName}/addOwner`, this.owner).then((res) => {
                         this.statusMessage = "Owner successfully created!";
                          this.showPopup = true;
