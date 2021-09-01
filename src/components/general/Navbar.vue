@@ -17,7 +17,7 @@
       <section class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav">
               <li class="nav-item">
-                  <router-link :to="{name: 'OwnerList'}" class="nav-link">Owners</router-link>
+                  <router-link :to="{name: 'OwnersList'}" class="nav-link">Owners</router-link>
             </li>
           </ul>
       </section>

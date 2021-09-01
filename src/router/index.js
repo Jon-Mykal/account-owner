@@ -6,6 +6,7 @@ import NotFound from '../views/errorpages/NotFound.vue'
 import Owners from '../views/Owner/Owners.vue';
 import OwnerDetails from '../views/Owner/OwnerDetails.vue';
 import OwnerCreate from '../views/Owner/OwnerCreate.vue';
+import OwnerEdit from '../views/Owner/OwnerEdit.vue';
 
 const routes = [
   {
@@ -20,7 +21,7 @@ const routes = [
   },
   {
     path: '/owners',
-    name: 'OwnerList',
+    name: 'OwnersList',
     component: Owners
   },
   {
@@ -33,6 +34,12 @@ const routes = [
     path: '/owners/create',
     name: 'OwnerCreate',
     component: OwnerCreate
+  },
+  {
+    path: '/owners/edit/:id',
+    name: 'OwnerEdit',
+    component: OwnerEdit,
+    props: true
   },
   {
     path: '/about',
