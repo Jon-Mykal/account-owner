@@ -60,7 +60,7 @@ export default {
                 addOwner() {
                     //store.dispatch(`$`)
                    
-                    store.dispatch(`${storeName}/addOwner`).then((res) => {
+                    store.dispatch(`${storeName}/addOwner`, this.owner).then((res) => {
                         this.statusMessage = "Owner successfully created!";
                          this.showPopup = true;
                         this.isSuccessful = true;
@@ -75,7 +75,7 @@ export default {
                 },
                 closePopup() {
                     if (this.isSuccessful) {
-                        router.push({ name: 'Owners'});
+                        router.push({ name: 'OwnersList'});
                     }
                     else {
                         this.showPopup = false;
