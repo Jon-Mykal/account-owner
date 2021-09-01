@@ -71,9 +71,9 @@ export default {
           router.push(routeData);
         },
         editOwner(ownerId) {
-          routeData.name = "OwnerDetails";
+          routeData.name = "OwnerEdit";
           routeData.params = { id: ownerId };
-          console.log(ownerId);
+          router.push(routeData);
         },
         removeOwner(ownerId) {
           confirm.require({
@@ -87,8 +87,7 @@ export default {
                   confirm.require({
                     message: "Successfully removed owner",
                     header: "Status",
-                    icon: "pi pi-success-circle",
-                    re
+                    icon: "pi pi-exclamation-triangle"
                   });
                 })
                 .catch((err) => {
