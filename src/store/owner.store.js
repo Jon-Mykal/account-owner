@@ -32,6 +32,12 @@ const actions = {
             commit('SET_OWNER', owner);
         });
     },
+    editOwner({commit}, { id, owner}) {
+        return OwnerService.update(id, owner).then((res) => {
+            commit('SET_OWNER', res.data);
+            return res.data;
+        });
+    },
     getOwners({commit}) {
         return OwnerService.getAll().then((res) => {
             commit('SET_OWNERS', res.data);
