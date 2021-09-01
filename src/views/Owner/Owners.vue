@@ -1,40 +1,42 @@
 <template>
   <div>
-    <router-link :to="{name: 'OwnerCreate'}" class="btn btn-primary">Create</router-link>
-    <!-- <ul>
-            <li v-for="owner in owners" :key="owner.id">
-                <OwnerCard :owner="owner" />
-            </li>
-        </ul> -->
-    <ConfirmDialog></ConfirmDialog>
-    <section class="row">
-      <section class="col-md-12">
-        <section class="table-responsive">
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Owner Name</th>
-                <th>Owner Address</th>
-                <th>Date of Birth</th>
-                <th>Details</th>
-                <th>Update</th>
-                <th>Delete</th>
-              </tr>
-            </thead>
-            <tbody>
-              <OwnerRow
-                v-for="owner in owners"
-                :key="owner.ownerId"
-                :owner="owner"
-                @viewDetails="viewDetails"
-                @editOwner="editOwner"
-                @removeOwner="removeOwner"
-              />
-            </tbody>
-          </table>
+    <section v-if="loading">
+        ...Loading
+    </section>
+    <section v-else>
+      <router-link :to="{name: 'OwnerCreate'}" class="btn btn-primary">Create</router-link>
+
+      <ConfirmDialog></ConfirmDialog>
+      <section class="row">
+        <section class="col-md-12">
+          <section class="table-responsive">
+            <table class="table table-striped">
+              <thead>
+                <tr>
+                  <th>Owner Name</th>
+                  <th>Owner Address</th>
+                  <th>Date of Birth</th>
+                  <th>Details</th>
+                  <th>Update</th>
+                  <th>Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                <OwnerRow
+                  v-for="owner in owners"
+                  :key="owner.ownerId"
+                  :owner="owner"
+                  @viewDetails="viewDetails"
+                  @editOwner="editOwner"
+                  @removeOwner="removeOwner"
+                />
+              </tbody>
+            </table>
+          </section>
         </section>
       </section>
     </section>
+
   </div>
 </template>
 
@@ -63,6 +65,7 @@ export default {
         params: null,
       };
       const state = reactive({
+        loading: false,
         owners: [],
         selectedOwner: null,
         viewDetails(ownerId) {
@@ -106,12 +109,15 @@ export default {
       });
 
       onMounted(() => {
+        state.loading = true;
         store
           .dispatch(`${storeName}/getOwners`, null, { root: true })
           .then((res) => {
+            state.loading = false;
             state.owners = res;
           })
           .catch((err) => {
+            state.loading = false;
             // Setup notification service
             console.log(err);
           });
@@ -121,7 +127,9 @@ export default {
         ...toRefs(state),
         onMounted,
       };
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   }
 }
 </script>

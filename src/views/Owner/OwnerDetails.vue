@@ -1,6 +1,9 @@
 <template>
     <div>
-        <section class="well">
+        <section v-if="loading">
+            ...Loading
+        </section>
+        <section v-else class="well">
             <section class="row">
                 <section class="col-md-3">
                     <strong>Owner Name:</strong>
@@ -78,13 +81,17 @@ export default {
             const storeName = 'ownerStore'
             const store = useStore();
             const state = reactive({
+                loading: false,
                 owner: {}
             });
 
             onMounted(() => {
+                state.loading = true;
                 store.dispatch(`${storeName}/getOwnerAccounts`, props.id, { root: true}).then((res) => {
                     state.owner = res;
+                    state.loading = false;
                 }).catch((err) => {
+                    state.loading = false;
                     console.log(`Something went wrong. See: ${err}`);
                 });
             });
