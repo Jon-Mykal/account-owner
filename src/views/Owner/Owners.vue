@@ -1,5 +1,8 @@
 <template>
-  <div>
+  <section v-if="hasNetworkIssue">
+    <NetworkIssue resource="owners"/>
+  </section>
+  <div v-else>
     <section v-if="loading">
         ...Loading
     </section>
@@ -42,23 +45,31 @@
 
 <script>
 import OwnerCard from "@/components/Owner/OwnerCard";
-import { reactive, toRefs, onMounted } from "vue";
+import { reactive, toRefs, onMounted, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useConfirm } from "primevue/useconfirm";
+import store from '@/store/index'
 import OwnerRow from "../../components/Owner/OwnerRow.vue";
+import NetworkIssue from '../../views/errorpages/NetworkIssue.vue';
+import { usePageLoading } from '@/composables/usePageLoading';
 
 export default {
+  props: {
+
+  },
   components: {
     OwnerCard,
-    OwnerRow
+    OwnerRow,
+    NetworkIssue
   },
-  setup() {
+  setup(props) {
     try {
-      const store = useStore();
+      const storeV3 = useStore();
       const router = useRouter();
       const confirm = useConfirm();
       const storeName = "ownerStore";
+      const pageLoader = usePageLoading();
 
       const routeData = {
         name: "",
@@ -66,6 +77,7 @@ export default {
       };
       const state = reactive({
         loading: false,
+        hasNetworkIssue: false,
         owners: [],
         selectedOwner: null,
         viewDetails(ownerId) {
@@ -108,16 +120,26 @@ export default {
         }
       });
 
-      onMounted(() => {
+      onBeforeMount(() => {
         state.loading = true;
-        store
+        console.log("Component trying to mount");
+        storeV3
           .dispatch(`${storeName}/getOwners`, null, { root: true })
           .then((res) => {
+            pageLoader.closeLoading();
             state.loading = false;
             state.owners = res;
           })
           .catch((err) => {
+            pageLoader.closeLoading();
             state.loading = false;
+            if (err.response && err.response.status.startsWith('5')) {
+              // Server error
+            }
+            else {
+              // Network error
+              state.hasNetworkIssue = true;
+            }
             // Setup notification service
             console.log(err);
           });
@@ -125,12 +147,39 @@ export default {
 
       return {
         ...toRefs(state),
-        onMounted,
+        onBeforeMount,
       };
     } catch (err) {
       console.log(err);
     }
   }
+
+  // beforeRouteEnter(routeTo, from, next) {
+  //   // One method of loading the page
+  //   // const storeName = "ownerStore";
+  //   // try {
+  //   //     store
+  //   //       .dispatch(`${storeName}/getOwners`, null, { root: true })
+  //   //       .then((res) => {
+  //   //         routeTo.params.owners = res;
+  //   //       })
+  //   //       .catch((err) => {
+  //   //         if (err.response && err.response.status == 404) {
+  //   //           next({ name: '404', params: { resource: 'owners' }})
+  //   //         }
+  //   //         else {
+  //   //           next({ name: 'NetworkIssue'})
+  //   //         }
+  //   //         // Setup notification service
+  //   //         console.log(err);
+  //   //       });
+  //   // } catch (error) {
+  //   //   console.log("Something went wrong", error);
+  //   // }
+
+
+  //   // console.log("Component has been routed to", store);
+  // }
 }
 </script>
 
