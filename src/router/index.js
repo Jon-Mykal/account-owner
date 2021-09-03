@@ -1,5 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
+
+// Error Pages
+import NetworkIssue from '../views/errorpages/NetworkIssue.vue'
 import NotFound from '../views/errorpages/NotFound.vue'
 import NProgress from 'nprogress';
 
@@ -17,8 +20,13 @@ const routes = [
   },
   {
     path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: NotFound
+    redirect: { name: '404', params: { resource: 'page'}}
+  },
+  {
+    path: '/404',
+    name: '404',
+    component: NotFound,
+    props: true
   },
   {
     path: '/owners',
@@ -64,8 +72,20 @@ router.beforeEach((routeTo, routeFrom, next) => {
   next();
 });
 
-router.afterEach(() => {
-  NProgress.done();
+// Let components manu
+router.afterEach((routeTo, routeFrom) => {
+  // Exclude routes with Create/Edit as a name
+  const routeToName = routeTo.name.toLowerCase();
+  var excludedRoutes = [
+    "create", "edit", "404", "home"
+  ]
+
+  excludedRoutes.forEach(route => {
+    if (routeToName.includes(route)) {
+      NProgress.done();
+    }
+  });
+
 });
 
 export default router
