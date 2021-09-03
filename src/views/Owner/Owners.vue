@@ -45,7 +45,7 @@
 
 <script>
 import OwnerCard from "@/components/Owner/OwnerCard";
-import { reactive, toRefs, onMounted, onBeforeMount } from "vue";
+import { reactive, toRefs, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { useConfirm } from "primevue/useconfirm";
@@ -146,7 +146,7 @@ export default {
 
       return {
         ...toRefs(state),
-        onBeforeMount,
+        onBeforeMount
       };
     } catch (err) {
       console.log(err);
