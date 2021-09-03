@@ -122,7 +122,6 @@ export default {
 
       onBeforeMount(() => {
         state.loading = true;
-        console.log("Component trying to mount");
         storeV3
           .dispatch(`${storeName}/getOwners`, null, { root: true })
           .then((res) => {
