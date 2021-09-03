@@ -77,7 +77,7 @@ router.afterEach((routeTo, routeFrom) => {
   // Exclude routes with Create/Edit as a name
   const routeToName = routeTo.name.toLowerCase();
   var excludedRoutes = [
-    "create", "edit", "404", "home"
+    "create", "404", "home"
   ]
 
   excludedRoutes.forEach(route => {
