@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import ownerStore from './owner.store'
+import authStore from './auth.store'
 
 export default createStore({
   state: {
@@ -9,6 +10,7 @@ export default createStore({
   actions: {
   },
   modules: {
-    ownerStore
+    ownerStore,
+    authStore
   }
 })
