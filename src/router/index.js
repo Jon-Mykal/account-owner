@@ -12,6 +12,10 @@ import OwnerDetails from '../views/Owner/OwnerDetails.vue';
 import OwnerCreate from '../views/Owner/OwnerCreate.vue';
 import OwnerEdit from '../views/Owner/OwnerEdit.vue';
 
+// Account
+import Register from '../views/account/Register.vue';
+import Login from '../views/account/Login.vue';
+
 const routes = [
   {
     path: '/',
@@ -59,6 +63,16 @@ const routes = [
     component: function () {
       return import(/* webpackChunkName: "about" */ '../views/About.vue')
     }
+  },
+  {
+    path: '/account/register',
+    name: 'Register',
+    component: Register
+  },
+  {
+    path: '/account/login',
+    name: 'Login',
+    component: Login
   }
 ]
 
@@ -72,13 +86,14 @@ router.beforeEach((routeTo, routeFrom, next) => {
   next();
 });
 
+const excludedRoutes = [
+  "create", "404", "home", "register", "login"
+]
 // Let components manu
 router.afterEach((routeTo, routeFrom) => {
   // Exclude routes with Create/Edit as a name
   const routeToName = routeTo.name.toLowerCase();
-  var excludedRoutes = [
-    "create", "404", "home"
-  ]
+
 
   excludedRoutes.forEach(route => {
     if (routeToName.includes(route)) {
