@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { authGuard } from './auth.guard'
 import Home from '../views/Home.vue'
 
 // Error Pages
@@ -35,24 +36,36 @@ const routes = [
   {
     path: '/owners',
     name: 'OwnersList',
-    component: Owners
+    component: Owners,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/owners/:id',
     name: 'OwnerDetails',
     component: OwnerDetails,
-    props: true
+    props: true,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/owners/create',
     name: 'OwnerCreate',
-    component: OwnerCreate
+    component: OwnerCreate,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/owners/edit/:id',
     name: 'OwnerEdit',
     component: OwnerEdit,
-    props: true
+    props: true,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/about',
@@ -83,7 +96,7 @@ const router = createRouter({
 
 router.beforeEach((routeTo, routeFrom, next) => {
   NProgress.start();
-  next();
+  authGuard(routeTo, routeFrom, next);
 });
 
 const excludedRoutes = [
