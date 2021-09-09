@@ -1,22 +1,29 @@
 export class UserRegistrationDto {
-    constructor(firstName, lastName, email, password, confirmPassword) {
-        this._firstName = firstName;
-        this._lastName = lastName;
-        this._email = email;
-        this._password= password;
-        this._confirmPassword = confirmPassword;
+    firstName;
+    lastName;
+    email;
+    password;
+    confirmPassword;
+
+    constructor(firstName = "", lastName = "", email = "", password = "", confirmPassword = "") {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password= password;
+        this.confirmPassword = confirmPassword;
     }
 
+    /*
     get firstName() {
-        return this._firstName;
+        return this.firstName;
     }
     
     get lastName() {
-        return this._lastName;
+        return this.lastName;
     }
 
     get email() {
-        return this._email;
+        return this.email;
     }
 
     get password() {
@@ -24,6 +31,7 @@ export class UserRegistrationDto {
     }
 
     get confirmPassword() {
-        return this._confirmPassword;
+        return this.confirmPassword;
     }
+    */
 }
