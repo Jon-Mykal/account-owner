@@ -14,5 +14,10 @@ export class AuthService {
         return axios.post(completeRoute, userRegDto);
     }
 
+    loginUser(route, userAuthDto) {
+        const completeRoute = `${RESOURCE_NAME}/${route}`;
+        return axios.post(completeRoute, userAuthDto);
+    }
+
 
 }
