@@ -22,9 +22,6 @@ import 'primeicons/primeicons.css';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'
 
-import axios from 'axios'
-
-axios.defaults.baseURL = process.env.VUE_APP_API_ENDPOINT;
 const app = createApp(App);
 
 app.use(ConfirmationService);
