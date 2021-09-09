@@ -132,7 +132,7 @@ export default {
           .catch((err) => {
             pageLoader.closeLoading();
             state.loading = false;
-            if (err.response && err.response.status.startsWith('5')) {
+            if (err.response && err.response.status) {
               // Server error
             }
             else {
