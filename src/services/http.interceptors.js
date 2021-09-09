@@ -12,4 +12,6 @@ export const interceptorsInit = (axiosInstance)  => {
 
         return options;
     });
-}   
+
+    return axiosInstance;
+} 
