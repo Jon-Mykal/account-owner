@@ -11,6 +11,7 @@ import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
 import Calendar  from 'primevue/calendar'
 import Dialog from 'primevue/dialog'
+import Password from 'primevue/password';
 
 
 // PrimeVue Styling
@@ -36,5 +37,5 @@ app.component('ConfirmDialog', ConfirmDialog)
 app.component('InputText', InputText)
 app.component('Calendar', Calendar)
 app.component('Dialog', Dialog)
-
+app.component('Password', Password)
 
