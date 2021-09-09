@@ -1,20 +1,31 @@
 import axios from "axios";
 import { AuthService } from "../services/auth.service";
+import * as jwt from "jsonwebtoken"
 
 const namespaced = true;
 const authSvc = new AuthService();
 
 const state = {
-    user: null,
+    user: {
+        email: "",
+        exp: Date.now(),
+        sub: "",
+        token: null
+    },
     isLoggedIn: false
 }
 
 const mutations =  {
-    SET_USER(state, userData) {
-        //state.user = user;
-        localStorage.setItem('token', userData.token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${userData.token}`;
-        state.isLoggedIn = !!localStorage.getItem('token')
+    LOGIN_USER(state, token) {
+        state.user.token = token;
+        const loginClaim = jwt.decode(token);
+        claimToState(state, loginClaim);
+        localStorage.setItem("token", token);
+    },
+    LOCAL_STORAGE_TOKEN_LOG_IN(state, token) {
+        state.user.token = token;
+        const loginClaim = jwt.decode(token);
+        claimToState(state, loginClaim);
     },
     CLEAR_USER() {
         location.reload();
@@ -31,7 +42,7 @@ const actions = {
         //console.log(userAuthDto);
         return authSvc.loginUser(route, userAuthDto).then(res => {
             if (res.data.isSuccessful) {
-                commit('SET_USER', res.data);
+                commit('LOGIN_USER', res.token);
             }
             return res.data;
         });
@@ -46,10 +57,18 @@ const actions = {
 }
 
 const getters = {
+    email: state => {
+        return state.user.email;
+    },
     isAuthenticated(state) {
-        state.isLoggedIn = !!localStorage.getItem('token');
-        return state.isLoggedIn;
+        return state.user.token;
     }
+}
+
+function claimToState(state, claim) {
+    state.user.sub = claim.sub;
+    state.user.email = claim.email;
+    state.user.exp = claim.exp;
 }
 
 const authStore = {
