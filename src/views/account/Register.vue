@@ -63,6 +63,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex';
 import { UserRegistrationDto } from '../../models/userRegistrationDto'
 export default {
+    name: 'Register',
     setup () {
         try {
             const route = useRoute();
