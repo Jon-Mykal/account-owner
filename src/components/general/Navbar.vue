@@ -31,7 +31,6 @@
                   <a href= "javascript:void(0)" @click="logout()" class="nav-link">Logout</a>
             </li>
           </ul>
-          <span>{{isLoggedIn}}</span>
       </section>
     </section>
   </nav>
@@ -51,6 +50,7 @@ export default {
     }
 
     const isLoggedIn = computed(() => {
+      console.log("working");
       return store.getters[`${storeName}/isAuthenticated`];
     });
 
