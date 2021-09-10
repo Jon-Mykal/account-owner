@@ -1,4 +1,4 @@
-import {api} from './apiClient'
+import api from './apiClient'
 
 const RESOURCE_NAME = '/owners';
 const config = { timeout: 5000 }
