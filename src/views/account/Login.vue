@@ -56,9 +56,10 @@ export default {
             loginUser() {
                 
                 store.dispatch(`${storeName}/loginUser`, {route: 'login', userAuthDto: this.user}).then(res => {
+                    console.log(returnUrl);
                     router.push(returnUrl);
                 }).catch(err => {
-
+                    console.log(err);
                 })
             },
             goBack() {
