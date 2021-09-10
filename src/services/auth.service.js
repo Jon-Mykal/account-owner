@@ -1,4 +1,4 @@
-import {api} from './apiClient'
+import api from './apiClient'
 import * as jwt from 'jsonwebtoken'
 
 const RESOURCE_NAME = '/account';
@@ -32,7 +32,7 @@ export class AuthService {
     isTokenValid() {
         let isValid = false;
         try {
-            const token = localStorage.getItem("token");
+            const token = this.getToken();
             if (!token) {
                 return isValid;
             }
