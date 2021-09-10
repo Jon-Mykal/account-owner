@@ -15,5 +15,8 @@ export const authGuard = (to, from, next) => {
             query: { returnUrl: to.fullPath }
         });
     }
-    next();
+    else {
+        next();
+    }
+    
 };
