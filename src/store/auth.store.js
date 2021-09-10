@@ -42,14 +42,13 @@ const actions = {
         //console.log(userAuthDto);
         return authSvc.loginUser(route, userAuthDto).then(res => {
             if (res.data.isSuccessful) {
-                commit('LOGIN_USER', res.token);
+                commit('LOGIN_USER', res.data.token);
             }
             return res.data;
         });
     },
     logout({commit}) {
-        localStorage.removeItem("token");
-        commit('CLEAR_USER');
+        authSvc.logoutUser();
     },
     isLoggedIn({getters}) {
         return getters.isAuthenticated;
@@ -61,6 +60,10 @@ const getters = {
         return state.user.email;
     },
     isAuthenticated(state) {
+        if (authSvc.isTokenValid()) {
+            state.user.token = authSvc.getToken();
+            console.log("Valid token");
+        }
         return state.user.token;
     }
 }
