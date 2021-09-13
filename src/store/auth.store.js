@@ -35,7 +35,7 @@ const mutations =  {
 const actions = {
     registerUser({commit}, {route, userRegDto} ) {
         return authSvc.registerUser(route, userRegDto).then(res => {
-
+            return res.data;
         });
     },
     loginUser({commit}, {route, userAuthDto}) {
@@ -49,6 +49,16 @@ const actions = {
     },
     logout({commit}) {
         authSvc.logoutUser();
+    },
+    forgotPassword({commit}, {route, forgotPasswordDto}) {
+        return authSvc.forgotPassword(route, forgotPasswordDto).then(res => {
+            return res.data;
+        });
+    },
+    resetPassword({commit}, {route, resetPasswordDto}) {
+        return authSvc.resetPassword(route, resetPasswordDto).then(res => {
+            return res.data;
+        })
     },
     isLoggedIn({getters}) {
         return getters.isAuthenticated;
