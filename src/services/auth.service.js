@@ -29,6 +29,16 @@ export class AuthService {
         location.reload();
     }
 
+    forgotPassword(route, forgotPasswordDto) {
+        const completeRoute = `${RESOURCE_NAME}/${route}`;
+        return api.post(completeRoute, forgotPasswordDto);
+    }
+
+    resetPassword(route, resetPasswordDto) {
+        const completeRoute = `${RESOURCE_NAME}/${route}`;
+        return api.post(completeRoute, resetPasswordDto);
+    }
+
     isTokenValid() {
         let isValid = false;
         try {
