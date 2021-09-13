@@ -16,6 +16,8 @@ import OwnerEdit from '../views/Owner/OwnerEdit.vue';
 // Account
 import Register from '../views/account/Register.vue';
 import Login from '../views/account/Login.vue';
+import ForgotPassword from '../views/account/ForgotPassword.vue';
+import ResetPassword from '../views/account/ResetPassword.vue';
 
 const routes = [
   {
@@ -86,6 +88,16 @@ const routes = [
     path: '/account/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/account/forgotpassword',
+    name: 'ForgotPassword',
+    component: ForgotPassword
+  },
+  {
+    path: '/account/resetpassword',
+    name: 'ResetPassword',
+    component: ResetPassword
   }
 ]
 
@@ -100,7 +112,7 @@ router.beforeEach((routeTo, routeFrom, next) => {
 });
 
 const excludedRoutes = [
-  "create", "404", "home", "register", "login"
+  "create", "404", "home", "register", "login", "forgotpassword", "resetpassword"
 ]
 // Let components manu
 router.afterEach((routeTo, routeFrom) => {
