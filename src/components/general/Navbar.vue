@@ -22,6 +22,9 @@
             <li class="nav-item">
               <router-link :to="{ name: 'Login' }" class="nav-link">Login</router-link>
             </li>
+            <li class="nav-item">
+              <router-link :to="{ name: 'ForgotPassword' }" class="nav-link">Forgot Password</router-link>
+            </li>
           </ul>
           <ul class="navbar-nav" v-if="isLoggedIn">
             <li class="nav-item">
