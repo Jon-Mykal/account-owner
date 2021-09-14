@@ -1,8 +1,21 @@
 import api from './apiClient'
 import * as jwt from 'jsonwebtoken'
+import UniversalSocialauth, { Google, Providers } from 'universal-social-auth';
+import { getCurrentInstance } from 'vue'
+import GAuth from 'vue3-google-oauth2';
+
 
 const RESOURCE_NAME = '/account';
 const config = { timeout: 5000 }
+
+// Auth Options
+const authOptions = {
+    google: {
+        clientId: "854809495249-5ot1f698ginq2k2g9lsc2b2o6hnnpjas.apps.googleusercontent.com",
+        redirectUri: "https://localhost:44331/signin-google"
+    }
+};
+
 
 export class AuthService {
     constructor() {
@@ -37,6 +50,27 @@ export class AuthService {
     resetPassword(route, resetPasswordDto) {
         const completeRoute = `${RESOURCE_NAME}/${route}`;
         return api.post(completeRoute, resetPasswordDto);
+    }
+
+    signInWithGoogle(fn) {
+        const data = google.accounts.id.initialize({
+            client_id: '854809495249-5ot1f698ginq2k2g9lsc2b2o6hnnpjas.apps.googleusercontent.com',
+            ux_mode: 'popup',
+            login_uri: 'http://localhost',
+            //callback: fn,
+            auto_select: false  
+        });
+
+        console.log(data);
+        // google.accounts.id.prompt((notification) => {
+        //     console.log(notification);
+        // });
+        
+    }
+
+    externalLogin(route, externalAuthDto) {
+        const completeRoute = `${RESOURCE_NAME}/${route}`;
+        return api.post(completeRoute, externalAuthDto);
     }
 
     isTokenValid() {
