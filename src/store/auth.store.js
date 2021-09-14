@@ -60,6 +60,26 @@ const actions = {
             return res.data;
         })
     },
+    signInWithGoogle({commit}, route) {
+        // return authSvc.signInWithGoogle().then(res => {
+        //     return res;
+        // });
+        authSvc.signInWithGoogle((res) => {
+            const responsePayload = jwt.decode(res.credential);
+        
+            const googleDTO = {
+                provider: 'Google',
+                token: res.credential
+            }
+
+            authSvc.externalLogin(route, googleDTO).then((rsp) => {
+                if (rsp.data.isSuccessful) {
+                    commit('LOGIN_USER', rsp.data.token);
+                }
+            });
+         
+        });
+    },
     isLoggedIn({getters}) {
         return getters.isAuthenticated;
     }
