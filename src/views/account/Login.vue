@@ -9,17 +9,17 @@
             </template>
         </Dialog>
         <section class="d-flex justify-content-center">
-            <section class="form-wrapper w-25 mt-5 shadow">
+            <section class="form-wrapper w-35 mt-5 shadow">
                 <h1 class="h3 my-3 py-3 font-weight-normal text-center">Login</h1>
-                <form @submit.prevent="loginUser()" class="form-horizontal">
-                <section class="form-group mb-3 pb-3 px-3">
+                <form @submit.prevent="loginUser()" class="form-horizontal px-4 mx-2">
+                <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
                         <InputText id="email" :class="{ 'p-invalid': false}" class="w-100" type="text" v-model="user.email"/>
                         <label for="email" :class="{ 'p-error': false}">Email</label>
                     </span>
                     <!-- <small v-if="(v$.name.$invalid && formSubmitted) || v$.name.$pending.$response" class="p-error">{{ v$.name.required.$message.replace('Value', 'Owner\'s Name')}}</small> -->
                 </section>
-                <section class="form-group mb-3 pb-3 px-3">
+                <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
                         <Password id="password" :class="{ 'p-invalid': false}" class="w-100" inputClass="w-100" v-model="user.password" toggleMask></Password>
                         <label :class="{ 'p-error': false}" for="password">Password</label>
@@ -31,17 +31,21 @@
                     </section>
                     <!-- <small v-if="(v$.dateOfBirth.$invalid && formSubmitted) || v$.dateOfBirth.$pending.$response" class="p-error">{{ v$.dateOfBirth.required.$message.replace('Value', 'Date of birth')}}</small> -->
                 </section>
-                <section class="d-flex flex-column mb-5 px-3">
-                    <section class="p-field pt-2">
-                        <p class="text-center">
-                            Don't have an account? <router-link :to="{name: 'Register'}">Sign Up</router-link>
-                        </p>
-                    </section>
+                <section class="d-flex flex-column mb-5">
                     <Button type="submit" label="Login" class="btn btn-primary mb-2" />
                     <Divider align="center">
                         <strong>Or</strong>
                     </Divider>
-                    <Button label="Sign in with Google" class="btn btn-primary" @click="signInWithGoogle()"/>
+                    <Button id="g-button" label="Sign in with Google" class="btn btn-primary mb-2" @click="signInWithGoogle()"/>
+                    <Button id="fb-button" label="Continue with Facebook" class="btn btn-primary">
+                        <font-awesome-icon :icon="['fab','facebook']" />
+                        Facebook
+                    </Button>
+                    <section class="p-field pt-3">
+                        <p class="text-center">
+                            Don't have an account? <router-link :to="{name: 'Register'}">Sign Up</router-link>
+                        </p>
+                    </section>
                 </section>
                 </form>
             </section>
@@ -65,13 +69,21 @@ export default {
         const storeName = "authStore";
         const store = useStore();
         let returnUrl = route.query["returnUrl"] || '/';
-        
+
+        google.accounts.id.initialize({
+            client_id: '854809495249-5ot1f698ginq2k2g9lsc2b2o6hnnpjas.apps.googleusercontent.com',
+            ux_mode: 'popup',
+            login_uri: 'http://localhost',
+            //callback: fn,
+            auto_select: false  
+        })
+
 const gAuth = inject('googleAuth');
         const state = reactive({
             user: new UserAuthDto(),
             showPopup: false,
             loginUser() {
-                
+                this.user.clientURI = 'http://localhost:8080/account/forgotpassword'
                 store.dispatch(`${storeName}/loginUser`, {route: 'login', userAuthDto: this.user}).then(res => {
                     console.log(returnUrl);
                     router.push(returnUrl);
@@ -119,5 +131,7 @@ const gAuth = inject('googleAuth');
 </script>
 
 <style scoped>
-
+#fb-button {
+    background-color: #4267B2;
+}
 </style>
