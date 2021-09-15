@@ -1,9 +1,7 @@
 export class UserAuthDto {
-    email;
-    password;
-
-    constructor(email = "", password = "") {
+    constructor(email = "", password = "", clientURI = "") {
         this.email = email;
         this.password = password;
+        this.clientURI = clientURI;
     }
 }
