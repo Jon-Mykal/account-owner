@@ -18,4 +18,16 @@ export default {
   .w-25 {
     width: 25% !important;
   }
+
+  .w-30 {
+    width: 30% !important;
+  }
+
+  .w-35 {
+    width: 35% !important;
+  }
+
+  .w-40 {
+    width: 40% !important;
+  }
 </style>
