@@ -14,16 +14,13 @@
       >
         <span class="navbar-toggler-icon"></span>
       </button>
-      <section class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul v-if="!isLoggedIn" class="navbar-nav">
+      <section class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+          <ul v-if="!isLoggedIn" class="navbar-nav mr-5 pr-5">
             <li class="nav-item">
-              <router-link :to="{name: 'Register'}" class="nav-link">Register</router-link>
+              <router-link :to="{name: 'Register'}" class="nav-link mr-3">Register</router-link>
             </li>
             <li class="nav-item">
-              <router-link :to="{ name: 'Login' }" class="nav-link">Login</router-link>
-            </li>
-            <li class="nav-item">
-              <router-link :to="{ name: 'ForgotPassword' }" class="nav-link">Forgot Password</router-link>
+              <router-link :to="{ name: 'Login' }" class="btn btn-primary px-4">Login</router-link>
             </li>
           </ul>
           <ul class="navbar-nav" v-if="isLoggedIn">
