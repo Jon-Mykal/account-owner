@@ -12,6 +12,11 @@ import 'primeicons/primeicons.css';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'
 
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faFacebook, faAmazon } from '@fortawesome/free-brands-svg-icons';
+import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+
 import PrimeVue from 'primevue/config'
 import ConfirmationService from 'primevue/confirmationservice'
 import ConfirmDialog from 'primevue/confirmdialog'
@@ -50,6 +55,9 @@ app.component('Calendar', Calendar);
 app.component('Dialog', Dialog);
 app.component('Password', Password);
 app.component('Divider', Divider);
+
+library.add(faFacebook, faUserSecret, faAmazon);
+app.component('font-awesome-icon', FontAwesomeIcon);
 
 app.provide('googleAuth', app.config.globalProperties.$gAuth);
 
