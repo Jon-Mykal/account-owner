@@ -122,11 +122,10 @@ export default {
                 },
                 editOwner(isFormValid) {
                     this.formSubmitted = true;
+                    
                     if (!isFormValid) {
                         return;
                     }
-
-                    return;
                     
                     this.loading = true;
                     store.dispatch(`${storeName}/editOwner`, {id: props.id, owner: this.owner}).then((res) => {
