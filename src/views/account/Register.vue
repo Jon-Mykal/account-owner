@@ -15,42 +15,53 @@
                 <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
                         <InputText id="firstName" @blur="firstName.meta.touched = true" 
-                        :class="{ 'p-invalid': !firstName.meta.valid && (firstName.meta.touched && firstName.meta.dirty)}" 
+                        :class="{ 'p-invalid': !firstName.meta.valid && formSubmitted}" 
                         class="w-100" type="text" 
                         v-model="newUser.firstName"
                         @input="firstName.value = newUser.firstName"
                         />
-                        <label for="firstName" :class="{ 'p-error': false}">First Name</label>
+                        <label for="firstName" :class="{ 'p-error': !firstName.meta.valid && formSubmitted }">First Name</label>
                     </span>
-                    <!-- <small v-if="(v$.name.$invalid && formSubmitted) || v$.name.$pending.$response" class="p-error">{{ v$.name.required.$message.replace('Value', 'Owner\'s Name')}}</small> -->
+                    <small v-if="!firstName.meta.valid && formSubmitted" class="p-error">{{ firstName.errorMessage }}</small>
                 </section>
                 <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
-                        <InputText id="lastName" :class="{ 'p-invalid': false}" class="w-100" type="text" v-model="newUser.lastName"/>
-                        <label for="lastName" :class="{ 'p-error': false}">Last Name</label>
+                        <InputText id="lastName" @blur="lastName.meta.touched = true"
+                        @input="lastName.value = newUser.lastName"
+                         :class="{ 'p-invalid': !lastName.meta.valid && formSubmitted}" class="w-100" type="text" v-model="newUser.lastName"/>
+                        <label for="lastName" :class="{ 'p-error': !lastName.meta.valid && formSubmitted}">Last Name</label>
                     </span>
-                    <!-- <small v-if="(v$.name.$invalid && formSubmitted) || v$.name.$pending.$response" class="p-error">{{ v$.name.required.$message.replace('Value', 'Owner\'s Name')}}</small> -->
+                    <small v-if="!lastName.meta.valid && formSubmitted" class="p-error">{{ lastName.errorMessage }}</small>
                 </section>
                 <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
-                        <InputText id="email" :class="{ 'p-invalid': false}" class="w-100" type="text" v-model="newUser.email"/>
-                        <label for="email" :class="{ 'p-error': false}">Email</label>
+                        <InputText id="email" 
+                        :class="{ 'p-invalid': !email.meta.valid && formSubmitted}" 
+                        @input="email.value = newUser.email"
+                        class="w-100" type="text" v-model="newUser.email"/>
+                        <label for="email" :class="{ 'p-error': !email.meta.valid && formSubmitted}">Email</label>
                     </span>
-                    <!-- <small v-if="(v$.name.$invalid && formSubmitted) || v$.name.$pending.$response" class="p-error">{{ v$.name.required.$message.replace('Value', 'Owner\'s Name')}}</small> -->
+                    <small v-if="!email.meta.valid && formSubmitted" class="p-error">{{ email.errorMessage }}</small>
                 </section>
                 <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
-                        <Password id="password" :class="{ 'p-invalid': false}" class="w-100" inputClass="w-100" v-model="newUser.password" toggleMask></Password>
-                        <label :class="{ 'p-error': false}" for="password">Password</label>
+                        <Password id="password" 
+                        :class="{ 'p-invalid': !password.meta.valid && formSubmitted}" 
+                        @input="password.value = newUser.password"
+                        class="w-100" inputClass="w-100" v-model="newUser.password" toggleMask></Password>
+                        <label :class="{ 'p-error': !password.meta.valid && formSubmitted}" for="password">Password</label>
                     </span>
-                    <!-- <small v-if="(v$.dateOfBirth.$invalid && formSubmitted) || v$.dateOfBirth.$pending.$response" class="p-error">{{ v$.dateOfBirth.required.$message.replace('Value', 'Date of birth')}}</small> -->
+                    <small v-if="!password.meta.valid && formSubmitted" class="p-error">{{ password.errorMessage }}</small>
                 </section>
                 <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
-                        <Password id="confirmPassword" :class="{ 'p-invalid': false}" class="w-100" inputClass="w-100" v-model="newUser.confirmPassword" toggleMask></Password>
-                        <label for="confirmPassword" :class="{ 'p-error': false}">Confirm Password</label>
+                        <Password id="confirmPassword" 
+                        :class="{ 'p-invalid': !confirmPassword.meta.valid && formSubmitted }" 
+                        @input="confirmPassword.value = newUser.confirmPassword"
+                        class="w-100" inputClass="w-100" v-model="newUser.confirmPassword" toggleMask></Password>
+                        <label for="confirmPassword" :class="{ 'p-error': !confirmPassword.meta.valid && formSubmitted }">Confirm Password</label>
                     </span>
-                    <!-- <small v-if="(v$.address.$invalid && formSubmitted) || v$.address.$pending.$response" class="p-error">{{ v$.address.required.$message.replace('Value', 'Address')}}</small> -->
+                    <small v-if="!confirmPassword.meta.valid && formSubmitted " class="p-error">{{ confirmPassword.errorMessage }}</small>
                 </section>
                 <section class="d-flex flex-column mb-5">
                     <Button type="submit" label="Register" class="btn btn-primary mb-2" :loading="isSubmitting" :disabled="formConfig.meta.valid"  />
@@ -67,7 +78,7 @@
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue'
+import { computed, reactive, toRefs } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex';
 import { UserRegistrationDto } from '../../models/userRegistrationDto'
@@ -127,11 +138,11 @@ export default {
                     }
                     
                     try {
-
+                        this.isSubmitting = true;
                         store.dispatch(`${storeName}/registerUser`, { route: 'register', userRegDto: this.newUser}).then((res) => {
-
+                            this.isSubmitting = false;
                         }).catch(err => {
-
+                            this.isSubmitting = false;
                         });
 
                     } catch (error) {
