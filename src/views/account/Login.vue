@@ -11,20 +11,20 @@
         <section class="d-flex justify-content-center">
             <section class="form-wrapper col-md-7 col-sm-9 col-12 col-lg-5 mt-5 shadow">
                 <h1 class="h3 my-3 py-3 font-weight-normal text-center">Login</h1>
-                <form @submit.prevent="loginUser(meta.valid)" class="form-horizontal px-4 mx-2">
+                <form @submit.prevent="loginUser()" class="form-horizontal px-4 mx-2">
                 <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
-                        <InputText id="email" @blur="email.meta.touched = true" :class="{ 'p-invalid': (!email.meta.valid && email.meta.dirty) && email.meta.touched }" class="w-100" type="text" v-model="email.value"/>
-                        <label for="email" :class="{ 'p-error': (!email.meta.valid && email.meta.dirty) && email.meta.touched }">Email</label>
+                        <InputText id="email" @input="email.value = user.email" :class="{ 'p-invalid': !email.meta.valid && formSubmitted }" class="w-100" type="text" v-model="user.email"/>
+                        <label for="email" :class="{ 'p-error': !email.meta.valid && formSubmitted }">Email</label>
                     </span>
-                    <small v-if="((!email.meta.valid && email.meta.dirty) && email.meta.touched) && formSubmitted" class="p-error">{{email.errorMessage}}</small>
+                    <small v-if="!email.meta.valid && formSubmitted" class="p-error">{{email.errorMessage}}</small>
                 </section>
                 <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
-                        <Password id="password" :class="{ 'p-invalid': password.errorMessage && formSubmitted }" class="w-100" inputClass="w-100" v-model="password.value" toggleMask></Password>
-                        <label :class="{ 'p-error': password.errorMessage && formSubmitted }" for="password">Password</label>
+                        <Password id="password" @input="password.value = user.password" :class="{ 'p-invalid': !password.meta.valid && formSubmitted }" class="w-100" inputClass="w-100" v-model="user.password" toggleMask></Password>
+                        <label :class="{ 'p-error': !password.meta.valid && formSubmitted }" for="password">Password</label>
                     </span>
-                    <small v-if="password.errorMessage && formSubmitted" class="p-error">{{password.errorMessage}}</small>
+                    <small v-if="!password.meta.valid && formSubmitted" class="p-error">{{password.errorMessage}}</small>
                     <section class="p-field pt-1 d-flex">
                         <span class="p-field fst-italic pt-1">
                             <router-link :to="{ name: 'ForgotPassword'}">Forgot Password</router-link>
@@ -33,7 +33,7 @@
                     <!-- <small v-if="(v$.dateOfBirth.$invalid && formSubmitted) || v$.dateOfBirth.$pending.$response" class="p-error">{{ v$.dateOfBirth.required.$message.replace('Value', 'Date of birth')}}</small> -->
                 </section>
                 <section class="d-flex flex-column mb-5">
-                    <Button type="submit" label="Login" class="btn btn-primary mb-2" :disabled="!meta.valid || isSubmitting" :loading="isSubmitting" />
+                    <Button type="submit" label="Login" class="btn btn-primary mb-2" :disabled="!formConfig.meta.value.valid || isSubmitting" :loading="isSubmitting" />
                     <Divider align="center">
                         <strong>Or</strong>
                     </Divider>
@@ -73,20 +73,20 @@ export default {
         const store = useStore();
         let returnUrl = route.query["returnUrl"] || '/';
 
-            // Define validation schema
-            const valSchema = yup.object({
-                email: yup.string().required().email().label('Email'),
-                password: yup.string().required().label('Password')
-            });
+        // Define validation schema
+        const valSchema = yup.object({
+            email: yup.string().required().email().label('Email'),
+            password: yup.string().required().label('Password')
+        });
 
-            const { meta } = useForm({
-                validationSchema: valSchema
-            });
+        const formConfig = useForm({
+            validationSchema: valSchema
+        });
 
-            const fieldsToValidate = reactive({
-                email: useField('email'),
-                password: useField('password')
-            });
+        const fieldsToValidate = reactive({
+            email: useField('email'),
+            password: useField('password')
+        });
 
         google.accounts.id.initialize({
             client_id: '854809495249-5ot1f698ginq2k2g9lsc2b2o6hnnpjas.apps.googleusercontent.com',
@@ -101,14 +101,17 @@ export default {
             formSubmitted: false,
             isSubmitting: false,
             showPopup: false,
-            loginUser(isFormValid) {
+            async loginUser() {
                 this.formSubmitted = true;
+                formConfig.setValues(this.user);
+                await formConfig.validate();
+                const isFormValid = formConfig.meta.value.valid;
                 if (!isFormValid) {
                     return;
                 }
 
                 this.isSubmitting = true;
-                this.user.clientURI = 'http://localhost:8080/account/forgotpassword'
+                this.user.clientURI = 'http://localhost:8080/account/forgotpassword';
                 store.dispatch(`${storeName}/loginUser`, {route: 'login', userAuthDto: this.user}).then(res => {
                     this.isSubmitting = false;
                     console.log(returnUrl);
@@ -152,7 +155,7 @@ export default {
                 //console.log(gAuth);
             }
         });
-        return {...toRefs(state), ...toRefs(fieldsToValidate), meta}
+        return {...toRefs(state), ...toRefs(fieldsToValidate), formConfig}
     }
 }
 </script>
