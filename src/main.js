@@ -27,6 +27,8 @@ import Calendar  from 'primevue/calendar'
 import Dialog from 'primevue/dialog'
 import Password from 'primevue/password';
 import Divider from 'primevue/divider';
+import BlockUI from 'primevue/blockui';
+import ProgressSpinner from 'primevue/progressspinner';
 
 
 
@@ -55,6 +57,8 @@ app.component('Calendar', Calendar);
 app.component('Dialog', Dialog);
 app.component('Password', Password);
 app.component('Divider', Divider);
+app.component('BlockUI', BlockUI);
+app.component('ProgressSpinner', ProgressSpinner);
 
 library.add(faFacebook, faUserSecret, faAmazon);
 app.component('font-awesome-icon', FontAwesomeIcon);
