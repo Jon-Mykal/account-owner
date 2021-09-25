@@ -1,8 +1,9 @@
 <template>
     <div>
-        <section v-if="loading">
-            ...Loading
-        </section>
+       
+       <section v-if="loading">
+            <Loading :isLoading="loading"/>
+       </section>
         <section v-else class="well">
             <section class="row">
                 <section class="col-md-3">
@@ -68,8 +69,13 @@
 import { reactive, toRefs } from '@vue/reactivity';
 import {useStore} from 'vuex'
 import { onMounted } from '@vue/runtime-core';
+import { usePageLoading } from '@/composables/usePageLoading';
+import Loading  from '@/components/general/Loading';
 export default {
     name: 'OwnerDetails',
+    components: {
+        Loading
+    },
     props: {
         id: {
             type: String,
@@ -80,6 +86,7 @@ export default {
         try {
             const storeName = 'ownerStore'
             const store = useStore();
+            const pageLoader = usePageLoading();
             const state = reactive({
                 loading: false,
                 owner: {}
@@ -90,10 +97,12 @@ export default {
                 store.dispatch(`${storeName}/getOwnerAccounts`, props.id, { root: true}).then((res) => {
                     state.owner = res;
                     state.loading = false;
+                    pageLoader.closeLoading();
                 }).catch((err) => {
                     state.loading = false;
                     console.log(`Something went wrong. See: ${err}`);
                 });
+                
             });
 
 
