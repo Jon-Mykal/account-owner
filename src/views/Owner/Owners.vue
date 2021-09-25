@@ -4,7 +4,7 @@
   </section>
   <div v-else>
     <section v-if="loading">
-        ...Loading
+      <Loading :isLoading="loading" />
     </section>
     <section v-else>
       <router-link :to="{name: 'OwnerCreate'}" class="btn btn-primary">Create</router-link>
@@ -45,6 +45,7 @@
 
 <script>
 import OwnerCard from "@/components/Owner/OwnerCard";
+import Loading from '@/components/general/Loading';
 import { reactive, toRefs, onBeforeMount } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
@@ -59,6 +60,7 @@ export default {
 
   },
   components: {
+    Loading,
     OwnerCard,
     OwnerRow,
     NetworkIssue
