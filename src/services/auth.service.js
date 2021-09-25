@@ -6,7 +6,7 @@ import GAuth from 'vue3-google-oauth2';
 
 
 const RESOURCE_NAME = '/account';
-const config = { timeout: 5000 }
+const config = { timeout: 15000 }
 
 // Auth Options
 const authOptions = {

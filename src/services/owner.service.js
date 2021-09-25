@@ -1,7 +1,7 @@
 import api from './apiClient'
 
 const RESOURCE_NAME = '/owners';
-const config = { timeout: 5000 }
+const config = { timeout: 15000 }
 
 const OwnerService = {
     getAll() {
