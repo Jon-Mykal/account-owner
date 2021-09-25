@@ -64,7 +64,7 @@
                     <small v-if="!confirmPassword.meta.valid && formSubmitted " class="p-error">{{ confirmPassword.errorMessage }}</small>
                 </section>
                 <section class="d-flex flex-column mb-5">
-                    <Button type="submit" label="Register" class="btn btn-primary mb-2" :loading="isSubmitting" :disabled="formConfig.meta.valid"  />
+                    <Button type="submit" label="Register" class="btn btn-primary mb-2" :loading="isSubmitting" :disabled="!formConfig.meta.value.valid"  />
                     <section class="p-field pt-2">
                         <p class="text-center">
                             Already have an account? <router-link :to="{name: 'Login'}"><strong>Log In</strong></router-link>
@@ -129,8 +129,8 @@ export default {
                 async registerUser() {
                     this.formSubmitted = true;
                     formConfig.setValues(this.newUser);
-                    const letter = await formConfig.validate();
-                    console.log(letter);
+
+                    await formConfig.validate();
                     const isFormValid = formConfig.meta.value.valid;
                     console.log(isFormValid);
                     if (!isFormValid) {
