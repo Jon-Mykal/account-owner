@@ -33,11 +33,22 @@ export class AuthService {
         return api.post(completeRoute, userAuthDto);
     }
 
+    refreshToken(route, tokenDto) {
+        const completeRoute = `${RESOURCE_NAME}/${route}`;
+        return api.post(completeRoute, tokenDto);
+    }
+
     getToken() {
         return localStorage.getItem("token");
     }
 
+    getRefreshToken() {
+        return localStorage.getItem("refreshToken");
+    }
+
     logoutUser() {
+        // May want to change this in future
+        // to be specific about things to be removed
         localStorage.clear();
         location.reload();
     }
@@ -94,6 +105,8 @@ export class AuthService {
 
         return isValid;
     }
+
+    
 
 
 }
