@@ -11,7 +11,7 @@
         <section class="d-flex justify-content-center">
             <section class="form-wrapper col-md-7 col-sm-9 col-12 col-lg-5 mt-5 shadow">
                 <h1 class="h3 my-3 py-3 font-weight-normal text-center">Register</h1>
-                <form @submit.prevent="registerUser()" class="form-horizontal px-4 mx-2">
+                <form @submit.prevent="registerUser()" class="form-horizontal px-md-4 mx-2">
                 <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
                         <InputText id="firstName" @blur="firstName.meta.touched = true" 
@@ -99,7 +99,9 @@ export default {
                 lastName: yup.string().required().label('Last name'),
                 email: yup.string().required().email().label('Email'),
                 password: yup.string().required().label('Password'),
-                confirmPassword: yup.string().required().label('Confirm Password')
+                confirmPassword: yup.string()
+                .oneOf([yup.ref('password'), null], "Passwords don't match!")
+                .required().label('Confirm Password')
             });
 
             const formConfig = useForm({
