@@ -1,9 +1,14 @@
 <template>
     <div>
-       
-       <section v-if="loading">
+        <section v-if="loading">
             <Loading :isLoading="loading"/>
-       </section>
+        </section>
+        <section v-else-if="hasNetworkIssue">
+            <NetworkIssue />
+        </section>
+        <section v-else-if="!owner">
+            <NotFound resource="owner" />
+        </section>
         <section v-else class="well">
             <section class="row">
                 <section class="col-md-3">
@@ -68,13 +73,17 @@
 <script>
 import { reactive, toRefs } from '@vue/reactivity';
 import {useStore} from 'vuex'
-import { onMounted } from '@vue/runtime-core';
+import { onMounted, onBeforeMount } from '@vue/runtime-core';
 import { usePageLoading } from '@/composables/usePageLoading';
 import Loading  from '@/components/general/Loading';
+import NetworkIssue from '../../views/errorpages/NetworkIssue.vue'
+import NotFound from '../../views/errorpages/NotFound.vue'
 export default {
     name: 'OwnerDetails',
     components: {
-        Loading
+        Loading,
+        NetworkIssue,
+        NotFound
     },
     props: {
         id: {
@@ -88,18 +97,28 @@ export default {
             const store = useStore();
             const pageLoader = usePageLoading();
             const state = reactive({
-                loading: false,
-                owner: {}
+                loading: true,
+                hasNetworkIssue: false,
+                owner: null
             });
 
             onMounted(() => {
-                state.loading = true;
                 store.dispatch(`${storeName}/getOwnerAccounts`, props.id, { root: true}).then((res) => {
                     state.owner = res;
-                    state.loading = false;
                     pageLoader.closeLoading();
-                }).catch((err) => {
                     state.loading = false;
+
+                }).catch((err) => {
+                     pageLoader.closeLoading();
+                    state.loading = false;
+                   
+                    
+                    if (err && err.response) {
+                        
+                    }
+                    else {
+                        state.hasNetworkIssue = true;
+                    }
                     console.log(`Something went wrong. See: ${err}`);
                 });
                 
