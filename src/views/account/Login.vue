@@ -11,7 +11,7 @@
         <section class="d-flex justify-content-center">
             <section class="form-wrapper col-md-7 col-sm-9 col-12 col-lg-5 mt-5 shadow">
                 <h1 class="h3 my-3 py-3 font-weight-normal text-center">Login</h1>
-                <form @submit.prevent="loginUser()" class="form-horizontal px-4 mx-2">
+                <form @submit.prevent="loginUser()" class="form-horizontal px-md-4 mx-2">
                 <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
                         <InputText id="email" @input="email.value = user.email" :class="{ 'p-invalid': !email.meta.valid && formSubmitted }" class="w-100" type="text" v-model="user.email"/>
