@@ -1,6 +1,6 @@
 <template>
     <section v-show="loading">
-        ...Loading
+        <Loading :isLoading="loading" />
     </section>
     <section v-show="!loading">
     <div v-show="(ownerFound && (!hasNetworkIssue))">
@@ -13,31 +13,31 @@
             </template>
         </Dialog>
         <section class="d-flex justify-content-center">
-            <section class="form-wrapper w-25 mt-5 shadow">
+            <section class="form-wrapper col-md-7 col-sm-9 col-12 col-lg-5 mt-5 shadow">
                 <h1 class="h3 my-3 py-3 font-weight-normal text-center">Edit Owner</h1>
-                <form @submit.prevent="editOwner(!false)" class="form-horizontal">
-                <section class="form-group mb-3 pb-3 px-3">
+                <form @submit.prevent="editOwner(!false)" class="form-horizontal px-md-4 mx-2">
+                <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
                         <InputText id="ownerName" :class="{ 'p-invalid': nameVal.errorMessage && formSubmitted}" class="w-100" type="text"  v-model="nameVal.value" />
                         <label for="ownerName" :class="{ 'p-error': nameVal.errorMessage && formSubmitted }">Owner's Name</label>
                     </span>
                     <small v-if="nameVal.errorMessage && formSubmitted" class="p-error">{{ nameVal.errorMessage }}</small>
                 </section>
-                <section class="form-group mb-3 pb-3 px-3">
+                <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
                         <Calendar id="dateOfBirth" :class="{ 'p-invalid': formSubmitted }" class="w-100" v-model="dateOfBirthVal.value" />
                         <label :class="{ 'p-error': formSubmitted }" for="dateOfBirth">Date of birth</label>
                     </span>
                     <small v-if="dateOfBirthVal.errorMessage && formSubmitted" class="p-error">{{dateOfBirthVal.errorMessage}}</small>
                 </section>
-                <section class="form-group mb-3 pb-3 px-3">
+                <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
                         <InputText id="address" :class="{ 'p-invalid': addressVal.errorMessage && formSubmitted}" class="w-100" v-model="addressVal.value"/>
                         <label for="address" :class="{ 'p-error': addressVal.errorMessage && formSubmitted }">Address</label>
                     </span>
                     <small v-if="addressVal.errorMessage && formSubmitted" class="p-error">Address errors</small>
                 </section>
-                <section class="d-flex flex-column mb-5 px-3">
+                <section class="d-flex flex-column mb-5">
                     <Button type="submit" label="Edit Owner" class="btn btn-primary mb-2" />
                     <Button label="Cancel" class="btn btn-outline-secondary p-button-secondary p-button-outlined" @click="goBack()" />
                 </section>
@@ -64,6 +64,7 @@ import { useVuelidate } from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
 import NetworkIssue from '../../views/errorpages/NetworkIssue.vue';
 import NotFound from '../../views/errorpages/NotFound.vue';
+import Loading from '@/components/general/Loading';
 import { usePageLoading } from '@/composables/usePageLoading';
 import { useField, useForm } from 'vee-validate';
 import * as yup from 'yup';
@@ -78,7 +79,8 @@ export default {
     },
     components: {
         NetworkIssue,
-        NotFound
+        NotFound,
+        Loading
     },
     setup (props) {
         try {
