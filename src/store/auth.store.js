@@ -105,7 +105,7 @@ const actions = {
                 }
                 
                 return authSvc.refreshToken('refresh', tokenDto).then((res) => {
-                    console.log("Hit here");
+                    //console.log("Hit here");
                     commit('REFRESH_USER', res.data);
                     return true;
                 }).catch(err => {
