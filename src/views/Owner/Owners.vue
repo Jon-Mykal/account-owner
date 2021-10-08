@@ -1,4 +1,5 @@
 <template>
+  <Toast />
   <section v-if="hasNetworkIssue">
     <NetworkIssue resource="owners"/>
   </section>
@@ -54,6 +55,7 @@ import store from '@/store/index'
 import OwnerRow from "../../components/Owner/OwnerRow.vue";
 import NetworkIssue from '../../views/errorpages/NetworkIssue.vue';
 import { usePageLoading } from '@/composables/usePageLoading';
+import { useToast } from "primevue/usetoast";
 
 export default {
   props: {
@@ -72,6 +74,7 @@ export default {
       const confirm = useConfirm();
       const storeName = "ownerStore";
       const pageLoader = usePageLoading();
+      const toast = useToast();
 
       const routeData = {
         name: "",
@@ -93,6 +96,7 @@ export default {
           router.push(routeData);
         },
         removeOwner(ownerId) {
+          const self = this;
           confirm.require({
             message: "Are you sure you want to delete this owner?",
             header: "Confirmation",
@@ -100,21 +104,20 @@ export default {
             accept() {
               store
                 .dispatch(`${storeName}/deleteOwner`, ownerId, { root: true })
-                .then((owners) => {
-                  confirm.require({
-                    message: "Successfully removed owner",
-                    header: "Status",
-                    icon: "pi pi-exclamation-triangle"
-                  });
+                .then((res) => {
+                  state.owners = res;
+                  toast.add({severity:  'success', summary: 'Delete Succesful!', detail: 'Owner successfully removed', life: 3500});
                 })
                 .catch((err) => {
-                  confirm.require({
-                    message: "Failed to removed owner. Please try again.",
-                    header: "Status",
-                    icon: "pi pi-danger-circle",
-                  });
+                    if (err && err.response) {
+                      toast.add({severity:  'error', summary: 'Delete Failed!', detail: err.response.data, life: 3500});
+                      console.log(err, err.response);
+                    }
+                    else {
+                      toast.add({severity:  'error', summary: 'Network Error!', detail:'There seems to be a problem with the network. Try again later.', life: 3500});
+                    }
                   console.log(
-                    `Something went wrong trying to remove owner. ${err}}`
+                    `Something went wrong trying to remove owner. ${err}`
                   );
                 });
             }
