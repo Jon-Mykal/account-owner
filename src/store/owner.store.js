@@ -17,8 +17,8 @@ const mutations = {
     SET_OWNERS(state, owners) {
         state.owners = owners;
     },
-    CLEAR_OWNER(state) {
-        state.owner = {};
+    CLEAR_OWNER(state, id) {
+        state.owners = state.owners.filter(o => o.ownerId != id);
     },
     CLEAR_OWNERS(state) {
         state.owners = [];
@@ -56,11 +56,10 @@ const actions = {
             return res.data;
         });
     },
-    deleteOwner({commit, state}, id) {
+    async deleteOwner({commit, state, dispatch}, id) {
+        await dispatch('authStore/tryTokenRefresh', null, { root: true});
         return OwnerService.delete(id).then((res) => {
-            console.log(res);
-            state.owners = state.owners.filter(x => x.Id != id);
-            commit('CLEAR_OWNER');
+            state.owners = state.owners.filter(x => x.ownerId != id);
             commit('SET_OWNERS', state.owners);
             return state.owners;
         });
