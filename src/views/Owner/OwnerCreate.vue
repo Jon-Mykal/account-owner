@@ -11,33 +11,33 @@
         <section class="d-flex justify-content-center">
             <section class="form-wrapper col-md-7 col-sm-9 col-12 col-lg-5 mt-5 shadow">
                 <h1 class="h3 my-3 py-3 font-weight-normal text-center">Create Owner</h1>
-                <form @submit.prevent="addOwner(!v$.$invalid)" class="form-horizontal px-md-4 mx-2">
+                <form @submit.prevent="addOwner()" class="form-horizontal px-md-4 mx-2">
                 <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
-                        <InputText id="ownerName" :class="{ 'p-invalid': v$.name.$invalid && formSubmitted}" class="w-100" type="text" v-model="v$.name.$model"/>
-                        <label for="ownerName" :class="{ 'p-error': v$.name.$invalid && formSubmitted}">Owner's Name</label>
+                        <InputText id="ownerName" @input="name.value = owner.name" :class="{ 'p-invalid': !name.meta.valid && formSubmitted}" class="w-100" type="text" v-model="owner.name"/>
+                        <label for="ownerName" :class="{ 'p-error': !name.meta.valid && formSubmitted}">Owner's Name</label>
                     </span>
-                    <small v-if="(v$.name.$invalid && formSubmitted) || v$.name.$pending.$response" class="p-error">{{ v$.name.required.$message.replace('Value', 'Owner\'s Name')}}</small>
+                    <small v-if="!name.meta.valid && formSubmitted" class="p-error">{{ name.errorMessage }}</small>
                 </section>
                 <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
-                        <Calendar id="dateOfBirth" :class="{ 'p-invalid': v$.dateOfBirth.$invalid && formSubmitted}" class="w-100" v-model="owner.dateOfBirth" 
+                        <Calendar id="dateOfBirth" @input="dateOfBirth.value = owner.dateOfBirth" :class="{ 'p-invalid': !dateOfBirth.meta.valid && formSubmitted}" class="w-100" v-model="owner.dateOfBirth" 
                         :showButtonBar="true"
                         :monthNavigator="true"
                         :yearNavigator="true"
                         :yearRange="dateRange"
                         :minDate="minDate"
                         :maxDate="maxDate" />
-                        <label :class="{ 'p-error': v$.dateOfBirth.$invalid && formSubmitted}" for="dateOfBirth">Date of birth</label>
+                        <label :class="{ 'p-error': !dateOfBirth.meta.valid && formSubmitted}" for="dateOfBirth">Date of birth</label>
                     </span>
-                    <small v-if="(v$.dateOfBirth.$invalid && formSubmitted) || v$.dateOfBirth.$pending.$response" class="p-error">{{ v$.dateOfBirth.required.$message.replace('Value', 'Date of birth')}}</small>
+                    <small v-if="!dateOfBirth.meta.valid && formSubmitted" class="p-error">{{ dateOfBirth.errorMessage }}</small>
                 </section>
                 <section class="form-group mb-3 pb-3">
                     <span class="p-float-label">
-                        <InputText id="address" :class="{ 'p-invalid': v$.address.$invalid && formSubmitted}" class="w-100" v-model="owner.address"/>
-                        <label for="address" :class="{ 'p-error': v$.address.$invalid && formSubmitted }">Address</label>
+                        <InputText id="address" @input="address.value = owner.address" :class="{ 'p-invalid': !address.meta.valid && formSubmitted}" class="w-100" v-model="owner.address"/>
+                        <label for="address" :class="{ 'p-error': !address.meta.valid && formSubmitted }">Address</label>
                     </span>
-                    <small v-if="(v$.address.$invalid && formSubmitted) || v$.address.$pending.$response" class="p-error">{{ v$.address.required.$message.replace('Value', 'Address')}}</small>
+                    <small v-if="!address.meta.valid && formSubmitted" class="p-error">{{ address.errorMessage }}</small>
                 </section>
                 <section class="d-flex flex-column mb-5">
                     <Button type="submit" label="Add Owner" class="btn btn-primary mb-2" />
@@ -55,6 +55,8 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import useVuelidate from '@vuelidate/core';
 import { required } from '@vuelidate/validators';
+import { useField, useForm } from 'vee-validate';
+import * as yup from 'yup';
 export default {
     name: "OwnerCreate",
     setup () {
@@ -62,6 +64,26 @@ export default {
             const store = useStore();
             const router = useRouter();
             const storeName = 'ownerStore';
+
+            // Setup Validation Schema
+            const valSchema = yup.object({
+                name: yup.string().required().label('Owner\'s Name'),
+                dateOfBirth: yup.date().required().label('Date of birth'),
+                address: yup.string().required().label('Address')
+            });
+
+            // Add Schema to form
+            const formConfig = useForm({
+                validationSchema: valSchema
+            });
+
+            // Define fields to be validated
+            const fieldsToValidate = reactive({
+                name: useField('name'),
+                dateOfBirth: useField('dateOfBirth'),
+                address: useField('address')
+            });
+
             const state = reactive({
                 statusMessage: "",
                 showPopup: false,
@@ -75,8 +97,13 @@ export default {
                     dateOfBirth: "",
                     address: ""
                 },
-                addOwner(isFormValid) {
+                async addOwner() {
                     this.formSubmitted = true;
+
+                    // Validate on submission
+                    formConfig.setValues(this.owner);
+                    await formConfig.validate();
+                    const isFormValid = formConfig.meta.value.valid;
                     if (!isFormValid) {
                         return;
                     }
@@ -114,7 +141,7 @@ export default {
             }
             const v$ = useVuelidate(rules, state);
 
-            return { ...toRefs(state), v$ };
+            return { ...toRefs(state), ...toRefs(fieldsToValidate), formConfig };
         } catch (error) {
             console.log(`Something went wrong. See: ${error}`);
         }
