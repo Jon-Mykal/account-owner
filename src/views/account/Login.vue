@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Toast />
         <Dialog header="Status" v-model:visible="showPopup" :modal="true">
             <p :innerHTML="statusMessage">
 
@@ -63,6 +64,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { UserAuthDto } from '../../models/userAuthDto'
 import { useStore } from 'vuex';
 import { useField, useForm } from 'vee-validate';
+import { useToast } from "primevue/usetoast";
 import * as yup from 'yup';
 
 export default {
@@ -71,6 +73,7 @@ export default {
         const router = useRouter();
         const storeName = "authStore";
         const store = useStore();
+        const toast = useToast();
         let returnUrl = route.query["returnUrl"] || '/';
 
         // Define validation schema
@@ -113,11 +116,23 @@ export default {
                 this.isSubmitting = true;
                 this.user.clientURI = 'http://localhost:8080/account/forgotpassword';
                 store.dispatch(`${storeName}/loginUser`, {route: 'login', userAuthDto: this.user}).then(res => {
-                    this.isSubmitting = false;
-                    console.log(returnUrl);
-                    router.push(returnUrl);
+                    toast.add({severity:  'success', summary: 'Login Successful!', life: 2000});
+                    
+                    setTimeout(() => {
+                        this.isSubmitting = false;
+                        router.push(returnUrl);
+                    }, 2000);
+                    
                 }).catch(err => {
+                    
                     this.isSubmitting = false;
+
+                    if (err && err.response) {
+                        
+                    }
+                    else {
+                        toast.add({severity:  'error', summary: 'Network Error!', detail:'There seems to be a problem with the network. Try again later.', life: 3500});
+                    }
                     console.log(err);
                 });
             },
