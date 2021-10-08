@@ -27,6 +27,9 @@
             <li class="nav-item">
                   <router-link :to="{name: 'OwnersList'}" class="nav-link">Owners</router-link>
             </li>
+            <li>
+              <router-link :to="{name: 'Profile' }" class="nav-link">Profile</router-link>
+            </li>
             <li class="nav-item">
                   <a href= "javascript:void(0)" @click="logout()" class="nav-link">Logout</a>
             </li>
