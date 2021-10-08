@@ -18,6 +18,7 @@ import Register from '../views/account/Register.vue';
 import Login from '../views/account/Login.vue';
 import ForgotPassword from '../views/account/ForgotPassword.vue';
 import ResetPassword from '../views/account/ResetPassword.vue';
+import Profile from '../views/account/Profile.vue';
 
 const routes = [
   {
@@ -98,6 +99,14 @@ const routes = [
     path: '/account/resetpassword',
     name: 'ResetPassword',
     component: ResetPassword
+  },
+  {
+    path: '/account/profile',
+    name: 'Profile',
+    component: Profile,
+    meta: {
+      requiresAuth: true
+    }
   }
 ]
 
