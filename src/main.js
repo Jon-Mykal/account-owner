@@ -20,6 +20,9 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 import PrimeVue from 'primevue/config'
 import ConfirmationService from 'primevue/confirmationservice'
 import ConfirmDialog from 'primevue/confirmdialog'
+import ToastService from 'primevue/toastservice'
+import Toast from 'primevue/toast'
+
 import Card from 'primevue/card'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
@@ -45,6 +48,7 @@ const gAuthOptions = {
 const app = createApp(App);
 
 app.use(ConfirmationService);
+app.use(ToastService);
 app.use(GAuth, gAuthOptions);
 app.use(store).use(router).use(PrimeVue).mount('#app');
 
@@ -59,6 +63,7 @@ app.component('Password', Password);
 app.component('Divider', Divider);
 app.component('BlockUI', BlockUI);
 app.component('ProgressSpinner', ProgressSpinner);
+app.component('Toast', Toast);
 
 library.add(faFacebook, faUserSecret, faAmazon);
 app.component('font-awesome-icon', FontAwesomeIcon);
