@@ -1,5 +1,6 @@
 <template>
     <div>
+        <Toast />
         <Dialog header="Status" v-model:visible="showPopup" :modal="true">
             <p :innerHTML="statusMessage">
 
@@ -14,14 +15,13 @@
                 <form @submit.prevent="forgotPassword()" class="form-horizontal">
                 <section class="form-group mb-3 pb-3 px-3">
                     <span class="p-float-label">
-                        <InputText id="email" :class="{ 'p-invalid': false}" class="w-100" type="text" v-model="userEmail"/>
-                        <label for="email" :class="{ 'p-error': false}">Email</label>
+                        <InputText id="email" @input="email.value = userEmail" :class="{ 'p-invalid': !email.meta.valid && formSubmitted }" class="w-100" type="text" v-model="userEmail"/>
+                        <label for="email" :class="{ 'p-error': !email.meta.valid && formSubmitted }">Email</label>
                     </span>
-                    <!-- <small v-if="(v$.name.$invalid && formSubmitted) || v$.name.$pending.$response" class="p-error">{{ v$.name.required.$message.replace('Value', 'Owner\'s Name')}}</small> -->
+                    <small v-if="!email.meta.valid && formSubmitted" class="p-error">{{ email.errorMessage }}</small>
                 </section>
                 <section class="d-flex flex-column mb-5 px-3">
-                    <Button type="submit" label="Send" class="btn btn-primary mb-2" />
-                    <Button label="Cancel" class="btn btn-outline-secondary p-button-secondary p-button-outlined" @click="goBack()" />
+                    <Button type="submit" label="Send" class="btn btn-primary mb-2" :disabled="!formConfig.meta.value.valid || isSubmitting" :loading="isSubmitting" />
                 </section>
                 </form>
             </section>
@@ -34,6 +34,9 @@ import { reactive, toRefs } from 'vue';
 import { ForgotPasswordDto} from '../../models/forgotPasswordDto'
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import { useField, useForm} from 'vee-validate';
+import { useToast} from 'primevue/usetoast';
+import * as yup from 'yup';
 export default {
     name: "ForgotPassword",
     setup () {
@@ -41,19 +44,50 @@ export default {
             const storeName = "authStore";
             const store = useStore();
             const router = useRouter();
+            const toast = useToast();
+
+            const valSchema = yup.object({
+                email: yup.string().email().required().label('Email')
+            });
+
+            const formConfig = useForm({
+                validationSchema: valSchema
+            });
+
+            const fieldsToValidate = reactive({
+                email: useField('email')
+            });
 
             const state = reactive({
                 userEmail: "",
+                formSubmitted: false,
+                isSubmitting: false,
                 showPopup: false,
-                forgotPassword() {
+                async forgotPassword() {
+                    this.formSubmitted = true;
+                    await formConfig.validate();
+                    const isValid = formConfig.meta.value.valid;
+
+                    if (!isValid) {
+                        return;
+                    }
                     // TODO: Put in environment
                     let baseURL = process.env.VUE_APP_LAUNCH_URL;
                     let clientURI = `${baseURL}/account/resetpassword`
                     let forgotPasswordDto = new ForgotPasswordDto(this.userEmail, clientURI);
 
+                    this.isSubmitting = true;
                     store.dispatch(`${storeName}/forgotPassword`, { route: 'forgotpassword', forgotPasswordDto }).then(res => {
-                        console.log(res);
-                    }).catch(error => {
+                        this.isSubmitting = false;
+                        toast.add({severity:  'success', summary: 'Request Sent!', detail: res, life: 3500});
+                    }).catch(err => {
+                        this.isSubmitting = false;
+                        if (err && err.response) {
+                            
+                        }
+                        else {
+                            toast.add({severity:  'error', summary: 'Network Error!', detail:'There seems to be a problem with the network. Try again later.', life: 3500});
+                        }
                         console.log(err);
                     });
                 },
@@ -65,7 +99,7 @@ export default {
                 }
             });
 
-            return {...toRefs(state)}
+            return {...toRefs(state), ...toRefs(fieldsToValidate), formConfig}
         } catch (error) {
             console.log(`Something went wrong in setup(): ${error}`);
         }
