@@ -2,6 +2,8 @@ import { createApp} from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import * as Sentry from "@sentry/vue";
+import { Integrations } from "@sentry/tracing";
 import 'nprogress/nprogress.css'
 
 // PrimeVue Styling
@@ -12,6 +14,7 @@ import 'primeicons/primeicons.css';
 import 'bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'
 
+// FontAwesome Libraries
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faFacebook, faAmazon } from '@fortawesome/free-brands-svg-icons';
 import { faUserSecret } from '@fortawesome/free-solid-svg-icons'
@@ -46,6 +49,22 @@ const gAuthOptions = {
 }
 
 const app = createApp(App);
+
+Sentry.init({
+  app,
+  dsn: "https://782c5b0ff34f48659f300d583b1ebc76@o1055455.ingest.sentry.io/6041547",
+  integrations: [
+    new Integrations.BrowserTracing({
+      routingInstrumentation: Sentry.vueRouterInstrumentation(router),
+      tracingOrigins: ["localhost", "my-site-url.com", /^\//],
+    }),
+  ],
+  // Set tracesSampleRate to 1.0 to capture 100%
+  // of transactions for performance monitoring.
+  // We recommend adjusting this value in production
+    tracesSampleRate: 1.0,
+  logErrors: true
+});
 
 app.use(ConfirmationService);
 app.use(ToastService);
